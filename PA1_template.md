@@ -1,15 +1,11 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
 ### Download the file and unzip if needed 
-```{r}
+
+```r
 unZipFileName <- "activity.csv"
 if(!file.exists(unZipFileName))
 {
@@ -25,7 +21,8 @@ fileName<- "repdata_Fdata_Factivity.zip"
 ```
 
 ### load the file 
-```{r}
+
+```r
 activity <- read.csv(unZipFileName)
 activity$date <- as.Date(activity$date,format = "%Y-%m-%d" )
 activityRemovNA <- activity[complete.cases(activity),]
@@ -40,35 +37,56 @@ For this part of the assignment, you can ignore the missing values in the datase
 3. Calculate and report the mean and median of the total number of steps taken per day
 
 ### Histogram of the total number of step each day
-```{r}
+
+```r
 totalStepsPerDay<-aggregate(steps ~ date,activityRemovNA,sum)
 hist(totalStepsPerDay$steps,main="Histogram of total number of steps per day",xlab = "steps per day")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
 
 ### mean and median number of steps per day 
-```{r}
+
+```r
 mean(totalStepsPerDay$steps)
 ```
-```{r}
+
+```
+## [1] 10766.19
+```
+
+```r
 median(totalStepsPerDay$steps)
+```
+
+```
+## [1] 10765
 ```
 ## What is the average daily activity pattern?
 1. Make a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ### 1. Make the plot 
-```{r}
+
+```r
 # calculat avg steps per time interval
 avgStepsPerInterval <- aggregate(steps~interval,activityRemovNA,mean)
 #create the plot 
 plot(avgStepsPerInterval$interval, avgStepsPerInterval$steps, type='l', col=1, main="Average number of steps by Interval", xlab="5 min Intervals", ylab="Average number of steps")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
 ### 2. fine the max interval
-```{r}
+
+```r
 maxIntervalIndex <- which.max(avgStepsPerInterval$steps)
 print(paste("the 5 min interval with the highest avg step is",avgStepsPerInterval[maxIntervalIndex,]$interval,"And the num of steps is",round(avgStepsPerInterval[maxIntervalIndex,]$steps,digits = 1)))
+```
+
+```
+## [1] "the 5 min interval with the highest avg step is 835 And the num of steps is 206.2"
 ```
 ## Imputing missing values
 
@@ -81,10 +99,15 @@ Note that there are a number of days/intervals where there are missing values (c
 
 
 ### 1. Calculate and report missing value total num
-```{r}
+
+```r
 # Calculate the number of rows with missing values
 activityMissingValue <- activity[!complete.cases(activity),]
 nrow(activityMissingValue)
+```
+
+```
+## [1] 2304
 ```
 
 ### 2. Strategy to fill in missing value
@@ -92,7 +115,8 @@ I will replace the missing value with the value of the avg of that interval acro
 
 ### 3. create the new dataset with fill in missing data 
 
-```{r}
+
+```r
 # create a copy of activity 
 # go over all missing value and fill in the avg step per interval value 
 ActivityFillMisiing <- activity
@@ -105,24 +129,35 @@ for(i in 1:nrow(ActivityFillMisiing))
   }
 }
 totalStepsPerDayFillMissing <-aggregate(steps ~ date,ActivityFillMisiing,sum)
-
 ```
 
 ### create a histogram  
-```{r}
+
+```r
 #histogram createion
 hist(totalStepsPerDayFillMissing$steps,main="Histogram of total number of steps per day (Imputing )",xlab = "steps per day")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 
 ### mean and median number of steps per day 
-```{r}
+
+```r
 mean(totalStepsPerDayFillMissing$steps)
 ```
 
-```{r}
+```
+## [1] 10766.19
+```
+
+
+```r
 median(totalStepsPerDayFillMissing$steps)
+```
+
+```
+## [1] 10766.19
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
 For this part the weekdays????????????????????????????????() function may be of some help here. Use the dataset with the filled-in missing values for this part.
@@ -134,7 +169,8 @@ For this part the weekdays????????????????????????????????() function may be of 
 ### 1. create a factor var for weekday and weekend
 
 first we will create a function to assinge a date if he is a weekday or a weekend
-```{r}
+
+```r
 AssingWeekDayStatus <- function(dateValue)
 {
   dayOfTheWeek <- weekdays(dateValue)
@@ -148,13 +184,20 @@ AssingWeekDayStatus <- function(dateValue)
 ```
 
 then we apply the function to the original dataset
-```{r}
+
+```r
 # Apply the AssingWeekDayStatus function and add a new column to activity dataset
 activity$dayStatus <- as.factor(sapply(activity$date,AssingWeekDayStatus))
 
 # load the ggplot2 library
 library(ggplot2)
+```
 
+```
+## Warning: package 'ggplot2' was built under R version 3.3.3
+```
+
+```r
 # Create the aggregated data frame by intervals and dayStatus
 avgStepsPerDayAndStatus <- aggregate(steps~interval+dayStatus,activity,mean)
 
@@ -166,7 +209,6 @@ plt <- ggplot(avgStepsPerDayAndStatus, aes(interval, steps)) +
     labs(x="Interval", y=expression("No of Steps")) +
     ggtitle("No of steps Per Interval by day type")
 print(plt)
-
 ```
 
-we can see from the chart that there are diffrent between weekday and weekend in weekend we start laters the day and it seemes that we walk more in later in the day in weekends 
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
