@@ -160,11 +160,11 @@ median(totalStepsPerDayFillMissing$steps)
 ## [1] 10766.19
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
-For this part the weekdays????????????????????????????????() function may be of some help here. Use the dataset with the filled-in missing values for this part.
+For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
 
 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
-2. Make a panel plot containing a time series plot??? = "????") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
+2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
 ### 1. create a factor var for weekday and weekend
 
@@ -212,3 +212,5 @@ print(plt)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
+we can see from the chart that there are diffrent between weekday and weekend in weekend we start laters the day and it seemes that we walk more in later in the day in weekends 
